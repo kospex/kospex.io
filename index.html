@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Kospex - Git Analytics Tool</title>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            :root {
+                --primary-color: #0a1930; /* Dark navy blue */
+                --secondary-color: #ffffff; /* White */
+                --accent-color: #3e8ed0; /* Light blue accent */
+                --text-color: #333333;
+                --section-padding: 80px 0;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                color: var(--text-color);
+                overflow-x: hidden;
+            }
+
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            /* Header & Navigation */
+            header {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                position: fixed;
+                width: 100%;
+                top: 0;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .navbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px 0;
+            }
+
+            .logo {
+                font-size: 24px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+
+            .nav-menu {
+                display: flex;
+                align-items: center;
+            }
+
+            .nav-menu li {
+                margin-left: 30px;
+            }
+
+            .nav-menu a {
+                position: relative;
+                transition: color 0.3s;
+            }
+
+            .nav-menu a:hover {
+                color: var(--accent-color);
+            }
+
+            .nav-menu a::after {
+                content: "";
+                position: absolute;
+                width: 0;
+                height: 2px;
+                background-color: var(--accent-color);
+                bottom: -5px;
+                left: 0;
+                transition: width 0.3s;
+            }
+
+            .nav-menu a:hover::after {
+                width: 100%;
+            }
+
+            .social-links {
+                display: flex;
+                gap: 15px;
+                margin-left: 30px;
+            }
+
+            .social-links a {
+                font-size: 18px;
+                transition: color 0.3s;
+            }
+
+            .social-links a:hover {
+                color: var(--accent-color);
+            }
+
+            /* Hero Section */
+            .hero {
+                height: 100vh;
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                display: flex;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(
+                    circle at 30% 30%,
+                    rgba(62, 142, 208, 0.1),
+                    transparent 70%
+                );
+            }
+
+            .hero-content {
+                max-width: 600px;
+                z-index: 1;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+                font-weight: 700;
+                margin-bottom: 20px;
+            }
+
+            .hero p {
+                font-size: 18px;
+                margin-bottom: 30px;
+                opacity: 0.9;
+            }
+
+            .cta-button {
+                display: inline-block;
+                background-color: var(--accent-color);
+                color: white;
+                padding: 12px 30px;
+                border-radius: 50px;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            .hero-image {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 50%;
+                height: 70%;
+                opacity: 0.8;
+            }
+
+            /* Features Section */
+            .features {
+                padding: var(--section-padding);
+                background-color: var(--secondary-color);
+            }
+
+            .section-title {
+                text-align: center;
+                margin-bottom: 60px;
+            }
+
+            .section-title h2 {
+                font-size: 36px;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            .section-title p {
+                max-width: 600px;
+                margin: 0 auto;
+                color: #666;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+            }
+
+            .feature-card {
+                background-color: white;
+                border-radius: 10px;
+                padding: 30px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+                transition: transform 0.3s;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+            }
+
+            .feature-icon {
+                font-size: 36px;
+                color: var(--accent-color);
+                margin-bottom: 20px;
+            }
+
+            .feature-card h3 {
+                font-size: 20px;
+                margin-bottom: 15px;
+                color: var(--primary-color);
+            }
+
+            /* Use Cases Section */
+            .use-cases {
+                padding: var(--section-padding);
+                background-color: #f8f9fa;
+            }
+
+            .use-case-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+            }
+
+            .use-case-card {
+                background-color: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            .use-case-content {
+                padding: 25px;
+            }
+
+            .use-case-card h3 {
+                font-size: 20px;
+                margin-bottom: 15px;
+                color: var(--primary-color);
+            }
+
+            /* Pricing Section */
+            .pricing {
+                padding: var(--section-padding);
+                background-color: var(--secondary-color);
+            }
+
+            .pricing-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 300px;
+            }
+
+            .coming-soon {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                padding: 40px;
+                border-radius: 10px;
+                text-align: center;
+                max-width: 600px;
+            }
+
+            .coming-soon h3 {
+                font-size: 28px;
+                margin-bottom: 15px;
+            }
+
+            .coming-soon p {
+                margin-bottom: 20px;
+            }
+
+            .notify-form {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .notify-form input {
+                padding: 12px 15px;
+                border: none;
+                border-radius: 50px 0 0 50px;
+                width: 300px;
+                outline: none;
+            }
+
+            .notify-form button {
+                background-color: var(--accent-color);
+                color: white;
+                border: none;
+                padding: 0 20px;
+                border-radius: 0 50px 50px 0;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .notify-form button:hover {
+                background-color: #2c7ab8;
+            }
+
+            /* Contact Section */
+            .contact {
+                padding: var(--section-padding);
+                background-color: #f8f9fa;
+            }
+
+            .contact-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 40px;
+            }
+
+            .contact-info {
+                display: flex;
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .contact-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .contact-icon {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .contact-details h4 {
+                margin-bottom: 5px;
+                color: var(--primary-color);
+            }
+
+            .contact-form {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .form-group label {
+                font-weight: 500;
+                color: var(--primary-color);
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                outline: none;
+                transition: border-color 0.3s;
+            }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                border-color: var(--accent-color);
+            }
+
+            .form-group textarea {
+                min-height: 150px;
+                resize: vertical;
+            }
+
+            .submit-btn {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                border: none;
+                padding: 12px;
+                border-radius: 5px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .submit-btn:hover {
+                background-color: var(--accent-color);
+            }
+
+            /* Footer */
+            footer {
+                background-color: var(--primary-color);
+                color: var(--secondary-color);
+                padding: 40px 0;
+            }
+
+            .footer-container {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 30px;
+            }
+
+            .footer-logo {
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 10px;
+            }
+
+            .footer-links h4 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .footer-links ul {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .footer-links a {
+                transition: color 0.3s;
+            }
+
+            .footer-links a:hover {
+                color: var(--accent-color);
+            }
+
+            .footer-social {
+                display: flex;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .footer-social a {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: rgba(255, 255, 255, 0.1);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.3s;
+            }
+
+            .footer-social a:hover {
+                background-color: var(--accent-color);
+            }
+
+            .copyright {
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .navbar {
+                    flex-direction: column;
+                    padding: 15px 0;
+                }
+
+                .nav-menu {
+                    margin-top: 15px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+
+                .nav-menu li {
+                    margin: 5px 10px;
+                }
+
+                .social-links {
+                    margin-top: 10px;
+                    margin-left: 0;
+                }
+
+                .hero h1 {
+                    font-size: 36px;
+                }
+
+                .hero-image {
+                    display: none;
+                }
+
+                .hero-content {
+                    max-width: 100%;
+                    text-align: center;
+                }
+
+                .contact-container {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header & Navigation -->
+        <header>
+            <div class="container">
+                <nav class="navbar">
+                    <div class="logo">Kospex</div>
+                    <ul class="nav-menu">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Documentation</a></li>
+                        <li><a href="#articles">Articles</a></li>
+                        <li><a href="#use-cases">Use Cases</a></li>
+                        <div class="social-links">
+                            <a href="https://github.com/kospex/" target="_blank"
+                                ><i class="fab fa-github"></i
+                            ></a>
+                            <a href="https://x.com/kospex" target="_blank"
+                                ><i class="fab fa-x-twitter"></i
+                            ></a>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Git Analytics for Smarter Development</h1>
+                    <p>
+                        Kospex helps teams uncover hidden insights in their code
+                        repositories with predictive maintenance, knowledge
+                        mapping, key person identification and dependency
+                        analysis tools.
+                    </p>
+                    <a href="#features" class="cta-button">Explore Features</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Powerful Git Analytics</h2>
+                    <p>
+                        Discover the full potential of your development data
+                        with our comprehensive analytics suite.
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Predictive Maintenance</h3>
+                        <p>
+                            Identify code areas that need attention before they
+                            become problems, reducing technical debt and
+                            preventing future issues.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <h3>Knowledge Mapping</h3>
+                        <p>
+                            Visualize the distribution of expertise across your
+                            codebase to improve collaboration and streamline
+                            knowledge transfer.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-cog"></i>
+                        </div>
+                        <h3>Key Person Identification</h3>
+                        <p>
+                            Recognize domain experts and critical contributors
+                            to mitigate bus factor risks and enhance team
+                            resilience.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Dependency Analysis</h3>
+                        <p>
+                            Monitor open source dependencies for security
+                            vulnerabilities and maintenance issues to keep your
+                            projects safe and up-to-date.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases Section -->
+        <section id="use-cases" class="use-cases">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Real-World Use Cases</h2>
+                    <p>
+                        See how Kospex is transforming development workflows for
+                        teams of all sizes.
+                    </p>
+                </div>
+                <div class="use-case-container">
+                    <div class="use-case-card">
+                        <div class="use-case-content">
+                            <h3>Reducing Technical Debt</h3>
+                            <p>
+                                A growing fintech company used Kospex's
+                                predictive maintenance to identify neglected
+                                code areas, resulting in a 40% reduction in bugs
+                                and improved system reliability.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="use-case-card">
+                        <div class="use-case-content">
+                            <h3>Optimizing Team Structure</h3>
+                            <p>
+                                An enterprise software team leveraged knowledge
+                                mapping to balance expertise across projects,
+                                enhancing collaboration and reducing development
+                                bottlenecks.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="use-case-card">
+                        <div class="use-case-content">
+                            <h3>Mitigating Security Risks</h3>
+                            <p>
+                                A healthcare application used dependency
+                                analysis to proactively address security
+                                vulnerabilities in open source components,
+                                maintaining compliance and protecting sensitive
+                                data.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="use-case-card">
+                        <div class="use-case-content">
+                            <h3>Onboarding Acceleration</h3>
+                            <p>
+                                A remote-first company utilized knowledge
+                                mapping features to reduce new developer
+                                onboarding time by 60%, helping new team members
+                                become productive faster.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Flexible Pricing Options</h2>
+                    <p>
+                        Choose the plan that fits your team's needs and scale as
+                        you grow.
+                    </p>
+                </div>
+                <div class="pricing-container">
+                    <div class="coming-soon">
+                        <h3>Pricing Coming Soon</h3>
+                        <p>
+                            We're finalizing our pricing plans to ensure the
+                            best value for teams of all sizes. Sign up to be
+                            notified when pricing is available.
+                        </p>
+                        <div class="notify-form">
+                            <input
+                                type="email"
+                                placeholder="Your email address"
+                            />
+                            <button type="submit">Notify Me</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Get in Touch</h2>
+                    <p>
+                        Have questions or want to learn more? We'd love to hear
+                        from you.
+                    </p>
+                </div>
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Email</h4>
+                                <p>info@kospex.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>GitHub</h4>
+                                <p>
+                                    <a
+                                        href="https://github.com/kospex/"
+                                        target="_blank"
+                                        >github.com/kospex</a
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fab fa-x-twitter"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h4>Twitter/X</h4>
+                                <p>
+                                    <a
+                                        href="https://x.com/kospex"
+                                        target="_blank"
+                                        >@kospex</a
+                                    >
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-container">
+                    <div class="footer-about">
+                        <div class="footer-logo">Kospex</div>
+                        <p>
+                            Empowering development teams with actionable
+                            insights from their git repositories.
+                        </p>
+                        <div class="footer-social">
+                            <a href="https://github.com/kospex/" target="_blank"
+                                ><i class="fab fa-github"></i
+                            ></a>
+                            <a href="https://x.com/kospex" target="_blank"
+                                ><i class="fab fa-twitter"></i
+                            ></a>
+                        </div>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#use-cases">Use Cases</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Articles</a></li>
+                            <li>
+                                <a
+                                    href="https://github.com/kospex/"
+                                    target="_blank"
+                                    >GitHub</a
+                                >
+                            </li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 Kospex. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                anchor.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    document
+                        .querySelector(this.getAttribute("href"))
+                        .scrollIntoView({
+                            behavior: "smooth",
+                        });
+                });
+            });
+
+            // Header scroll effect
+            window.addEventListener("scroll", function () {
+                const header = document.querySelector("header");
+                header.classList.toggle("scrolled", window.scrollY > 50);
+            });
+        </script>
+    </body>
+</html>
