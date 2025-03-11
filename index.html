@@ -480,6 +480,18 @@
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
 
+            .cta-button {
+                display: inline-block;
+                background-color: var(--accent-color);
+                color: white;
+                padding: 12px 30px;
+                border-radius: 50px;
+                font-weight: 600;
+                transition: all 0.3s;
+                position: relative; /* Add this */
+                z-index: 10; /* Add this */
+            }
+
             /* Responsive Design */
             @media (max-width: 768px) {
                 .navbar {
@@ -560,7 +572,12 @@
                         knowledge mapping, key person identification and open
                         source dependency analysis tools.
                     </p>
-                    <a href="#features" class="cta-button">Explore Features</a>
+                    <a
+                        href="#features"
+                        class="cta-button"
+                        id="explore-features-btn"
+                        >Explore Features</a
+                    >
                 </div>
             </div>
         </section>
@@ -780,29 +797,13 @@
             document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
                 anchor.addEventListener("click", function (e) {
                     e.preventDefault();
-                    const targetId = this.getAttribute("href");
-                    console.log("Clicking link to:", targetId);
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
+                    document
+                        .querySelector(this.getAttribute("href"))
+                        .scrollIntoView({
                             behavior: "smooth",
                         });
-                    } else {
-                        console.error("Target element not found:", targetId);
-                    }
                 });
             });
-
-            // document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-            //     anchor.addEventListener("click", function (e) {
-            //         e.preventDefault();
-            //         document
-            //             .querySelector(this.getAttribute("href"))
-            //             .scrollIntoView({
-            //                 behavior: "smooth",
-            //             });
-            //     });
-            // });
 
             // Header scroll effect
             window.addEventListener("scroll", function () {
